@@ -9,6 +9,8 @@ import { ReactComponent as FluicityLogo } from 'static/svg/Logo_fluicity.svg';
 const useStyles = makeStyles(theme => ({
   header: {
     padding: theme.spacing(1),
+    paddingTop: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
     justifyContent: 'space-between',
     display: 'flex'
   },
@@ -17,6 +19,10 @@ const useStyles = makeStyles(theme => ({
   },
   loginBtn: {
     borderRadius: '20px'
+  },
+  nav: {
+    position: 'relative',
+    zIndex: 1
   }
 }));
 
@@ -28,7 +34,7 @@ function Navbar() {
   const classes = useStyles();
 
   return (
-    <Box component="nav" boxShadow={3}>
+    <Box component="nav" className={classes.nav} boxShadow={3}>
       <Container className={classes.header}>
         <Link to="/" className={classes.logoWrapper}>
           <FluicityLogo color="black" />
