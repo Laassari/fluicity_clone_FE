@@ -2,8 +2,8 @@ import React from 'react';
 import Container from '@material-ui/core/Container';
 import { Route, BrowserRouter } from 'react-router-dom';
 import Navbar from './Navbar/';
-import Home from '../pages/Home';
-import About from '../pages/About';
+import Home from 'pages/Home';
+import About from 'pages/About';
 import './App.css';
 
 function App() {

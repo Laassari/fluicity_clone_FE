@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import { Container } from '@material-ui/core';
-import { ReactComponent as FluicityLogo } from '../../static/svg/Logo_fluicity.svg';
+import { ReactComponent as FluicityLogo } from 'static/svg/Logo_fluicity.svg';
 
 const useStyles = makeStyles(theme => ({
   header: {
