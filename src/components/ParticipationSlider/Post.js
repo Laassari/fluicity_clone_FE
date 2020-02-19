@@ -1,0 +1,108 @@
+import React from 'react';
+import {
+  Button,
+  CardContent,
+  Card,
+  Avatar,
+  Typography,
+  makeStyles,
+  CardMedia,
+  Paper
+} from '@material-ui/core';
+import { cyan } from '@material-ui/core/colors';
+import Image from 'assets/images/img.jpg';
+
+const useStyles = makeStyles(theme => ({
+  postWrapper: {
+    position: 'relative',
+    margin: '0 8px'
+  },
+  action: {
+    borderRadius: 30
+  },
+  headerImage: {
+    height: 150
+  },
+  avatar: {
+    position: 'absolute',
+    top: 118,
+    left: '50%',
+    transform: 'translate(-50%)',
+    height: 60,
+    width: 60,
+    boxShadow: '0 0px 0 4px white'
+  },
+  cardContent: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    marginTop: theme.spacing(3)
+  },
+  author: {
+    textTransform: 'uppercase',
+    color: theme.palette.grey[700],
+    fontWeight: 500,
+    fontSize: 14
+  },
+  title: {
+    marginTop: 5
+  },
+  excerpt: {
+    fontSize: 14,
+    margin: '10px 3px 20px'
+  },
+  projectType: {
+    position: 'absolute',
+    top: 50,
+    padding: '6px 30px',
+    borderTopRightRadius: 50,
+    borderBottomRightRadius: 50,
+    color: '#fff',
+    backgroundColor: cyan[500],
+    textTransform: 'uppercase',
+    fontSize: 12
+  }
+}));
+
+function Post({ children }) {
+  const styles = useStyles();
+
+  return (
+    <Card className={styles.postWrapper}>
+      <CardMedia
+        className={styles.headerImage}
+        image={Image}
+        title="post header image"
+      />
+      <Avatar src={Image} className={styles.avatar}>
+        N
+      </Avatar>
+      <Paper square className={styles.projectType}>
+        News
+      </Paper>
+
+      <CardContent className={styles.cardContent}>
+        <Typography color="textPrimary" className={styles.author}>
+          THOMAS P.
+        </Typography>
+        <Typography variant="h5" display="block" className={styles.title}>
+          Comment ça marche?
+        </Typography>
+        <Typography color="textSecondary" className={styles.excerpt}>
+          Bienvenue sur le site collaboratif Vos Idées Vertes ! Votre rôle ?
+          Partagez vos propositions concrètes, locales ...
+        </Typography>
+
+        <Button
+          variant="outlined"
+          color="primary"
+          classes={{ root: styles.action }}
+        >
+          Read more
+        </Button>
+      </CardContent>
+    </Card>
+  );
+}
+
+export default Post;
