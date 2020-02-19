@@ -1,3 +1,4 @@
+import { hot } from 'react-hot-loader/root';
 import React from 'react';
 import Box from '@material-ui/core/Box';
 import { Route, BrowserRouter } from 'react-router-dom';
@@ -20,4 +21,4 @@ function App() {
   );
 }
 
-export default App;
+export default hot(App);
