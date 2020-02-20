@@ -12,7 +12,7 @@ function App() {
   return (
     <BrowserRouter>
       <Navbar />
-      <Box>
+      <Box style={{ minHeight: 'calc(100vh - 140px)' }}>
         <Route path="/" exact component={Home} />
         <Route path="/about" exact component={About} />
       </Box>
