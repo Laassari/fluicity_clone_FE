@@ -10,6 +10,7 @@ import {
   Paper
 } from '@material-ui/core';
 import { cyan } from '@material-ui/core/colors';
+import { Link } from 'react-router-dom';
 import Image from 'assets/images/img.jpg';
 
 const useStyles = makeStyles(theme => ({
@@ -61,6 +62,9 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: cyan[500],
     textTransform: 'uppercase',
     fontSize: 12
+  },
+  link: {
+    textDecoration: 'none'
   }
 }));
 
@@ -93,13 +97,15 @@ function Post({ children }) {
           Partagez vos propositions concrètes, locales ...
         </Typography>
 
-        <Button
-          variant="outlined"
-          color="primary"
-          classes={{ root: styles.action }}
-        >
-          Read more
-        </Button>
+        <Link to="/spaces/space-name" className={styles.link}>
+          <Button
+            variant="outlined"
+            color="primary"
+            classes={{ root: styles.action }}
+          >
+            Read more
+          </Button>
+        </Link>
       </CardContent>
     </Card>
   );
