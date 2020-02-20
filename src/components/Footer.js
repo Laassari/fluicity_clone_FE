@@ -27,8 +27,7 @@ function Footer() {
       container
       justify="space-between"
       style={{
-        padding: 24,
-        marginTop: 100
+        padding: 24
       }}
     >
       <Grid item>

@@ -9,7 +9,7 @@ const useStyles = makeStyles(theme => ({
     backgroundImage:
       'linear-gradient(180deg, #cce7f4 0%, #ffffff 35%, #ffffff 100%)',
     minHeight: 'calc(100vh - 52px)',
-    paddingTop: theme.spacing(4)
+    padding: theme.spacing(4, 4)
   },
   welcomeText: {
     color: blue[500],
