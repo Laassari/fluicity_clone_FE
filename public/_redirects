@@ -1,0 +1,2 @@
+# redirect all trafic to index to be handled by react-router
+/*    /index.html   200
