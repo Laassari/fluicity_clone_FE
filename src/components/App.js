@@ -8,18 +8,24 @@ import About from 'pages/About';
 import './App.css';
 import Footer from './Footer';
 import Space from 'pages/Space';
+import { Provider } from 'react-redux';
+import configureStore from './store';
+
+const store = configureStore();
 
 function App() {
   return (
-    <BrowserRouter>
-      <Navbar />
-      <Box style={{ minHeight: 'calc(100vh - 140px)' }}>
-        <Route path="/" exact component={Home} />
-        <Route path="/spaces/:id" exact component={Space} />
-        <Route path="/about" exact component={About} />
-      </Box>
-      <Footer />
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        <Navbar />
+        <Box style={{ minHeight: 'calc(100vh - 140px)' }}>
+          <Route path="/" exact component={Home} />
+          <Route path="/spaces/:id" exact component={Space} />
+          <Route path="/about" exact component={About} />
+        </Box>
+        <Footer />
+      </BrowserRouter>
+    </Provider>
   );
 }
 
