@@ -17,6 +17,7 @@ export function* loginUser({ payload }) {
   } else {
     yield put({ type: USER.SET, payload: response });
     yield put({ type: USER.LOGIN_SUCCESS });
+    yield put({ type: USER.AUTH_MODAL_OPEN, payload: false });
   }
 }
 
@@ -40,5 +41,25 @@ function* checkEmailExist({ payload }) {
       type: USER.CHECK_EMAIL_EXISTS_FAIL,
       payload: response.success
     });
+  }
+}
+
+export function* watchSignUp() {
+  yield takeEvery(USER.SIGNUP_REQUEST, signUp);
+}
+
+function* signUp({ payload }) {
+  const response = yield Api({
+    url: '/authenticate/sign_up',
+    method: 'POST',
+    data: payload
+  });
+
+  if (response.id) {
+    yield put({ type: USER.SET, payload: response });
+    yield put({ type: USER.SIGNUP_SUCCESS });
+    yield put({ type: USER.AUTH_MODAL_OPEN, payload: false });
+  } else {
+    yield put({ type: USER.SIGNUP_FAIL, payload: response });
   }
 }
