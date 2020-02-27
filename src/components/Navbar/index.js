@@ -43,24 +43,35 @@ function Navbar() {
         <Link to="/" className={classes.logoWrapper}>
           <FluicityLogo color="black" />
         </Link>
-        {!user.email ? (
-          <Button
-            classes={{ root: classes.loginBtn }}
-            color="primary"
-            variant="contained"
-            onClick={() => {
-              dispatch({ type: USER.AUTH_MODAL_OPEN, payload: true });
-            }}
-          >
-            Join
-          </Button>
-        ) : (
-          <Button size="small">
-            <Avatar style={{ width: 35, height: 35 }}>
-              {user.first_name[0]}
-            </Avatar>
-          </Button>
-        )}
+
+        <Box>
+          {user.email && (
+            <Link to="/posts/new">
+              <Button variant="outlined" style={{ marginRight: 8 }}>
+                New Post
+              </Button>
+            </Link>
+          )}
+
+          {!user.email ? (
+            <Button
+              classes={{ root: classes.loginBtn }}
+              color="primary"
+              variant="contained"
+              onClick={() => {
+                dispatch({ type: USER.AUTH_MODAL_OPEN, payload: true });
+              }}
+            >
+              Join
+            </Button>
+          ) : (
+            <Button size="small">
+              <Avatar style={{ width: 28, height: 28 }}>
+                {user.first_name[0]}
+              </Avatar>
+            </Button>
+          )}
+        </Box>
       </Container>
 
       <AuthenticationModal modalOpen={authModalOpen} />

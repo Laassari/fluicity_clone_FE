@@ -10,6 +10,7 @@ import Footer from './Footer';
 import Space from 'pages/Space';
 import { Provider } from 'react-redux';
 import configureStore from './store';
+import NewPost from 'pages/NewPost';
 
 const store = configureStore();
 
@@ -21,6 +22,7 @@ function App() {
         <Box style={{ minHeight: 'calc(100vh - 140px)' }}>
           <Route path="/" exact component={Home} />
           <Route path="/spaces/:id" exact component={Space} />
+          <Route path="/posts/new" exact component={NewPost} />
           <Route path="/about" exact component={About} />
         </Box>
         <Footer />
