@@ -1,4 +1,4 @@
-const API_ENDPOINT = 'http://localhost:3000';
+const API_ENDPOINT = process.env.API_ENDPOINT || 'http://localhost:3000';
 
 async function Api({
   method = 'GET',
