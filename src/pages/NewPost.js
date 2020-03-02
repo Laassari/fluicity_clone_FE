@@ -9,10 +9,12 @@ import {
   Button,
   Hidden,
   Fab,
-  CircularProgress
+  CircularProgress,
+  Box
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useDispatch, useSelector } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 import NewIdeaImage from 'assets/images/new_idea.png';
 import { ReactComponent as SvgX } from 'assets/svg/x.svg';
 import { POST } from 'components/store/constants';
@@ -50,8 +52,9 @@ function NewPost() {
   const [category, setCategory] = useState(-1);
   const [imageFile, setImageFile] = useState(null);
   const dispatch = useDispatch();
-  const { postCreate } = useSelector(state => ({
-    postCreate: state.post.postCreate
+  const { postCreate, post } = useSelector(state => ({
+    postCreate: state.post.postCreate,
+    post: state.post.content
   }));
 
   const fileSelected = event => {
@@ -72,114 +75,144 @@ function NewPost() {
   };
 
   const submitPost = () => {
-    const post = {};
+    const post = {
+      title,
+      description,
+      image: encodeImageToBase64(imageUrl())
+    };
+
     dispatch({ type: POST.CREATE_REQUEST, payload: post });
   };
 
+  const encodeImageToBase64 = image => {
+    const img = new Image(300, 300);
+    img.src = image;
+    const canvas = document.createElement('canvas');
+    canvas.width = img.width;
+    canvas.height = img.height;
+
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+
+    const dataURL = canvas.toDataURL('image/png');
+
+    return dataURL.split(',')[1];
+  };
+
+  if (postCreate.success && post) {
+    return <Redirect to={`/posts/${post.id}`} />;
+  }
   return (
     <Container className={styles.post}>
-      <Card className={styles.header}>
-        <Typography variant="h5" component="h1">
-          Create a new Post
-        </Typography>
-        <Typography className={styles.headerSubTitle}>
-          Your idea will be public and debated. An organization may choose to
-          make it happen.
-        </Typography>
-      </Card>
-      <br />
-      <br />
+      <Box mb={2}>
+        <Card className={styles.header}>
+          <Typography variant="h5" component="h1">
+            Create a new Post
+          </Typography>
+          <Typography className={styles.headerSubTitle}>
+            Your idea will be public and debated. An organization may choose to
+            make it happen.
+          </Typography>
+        </Card>
+      </Box>
 
       <Card className={styles.content}>
-        <TextField
-          value={title}
-          fullWidth
-          variant="outlined"
-          placeholder="concise title..."
-          label="Title"
-          required
-          autoComplete="off"
-          onChange={event => setTitle(event.target.value)}
-          helperText={`${title.length}/140`}
-        />
+        <Box mb={4}>
+          <TextField
+            error={postCreate.fail && postCreate.fail['title']}
+            value={title}
+            fullWidth
+            variant="outlined"
+            placeholder="concise title..."
+            label="Title"
+            required
+            autoComplete="off"
+            onChange={event => setTitle(event.target.value)}
+            helperText={
+              postCreate.fail && postCreate.fail['title']
+                ? `title ${postCreate.fail['title']}`
+                : `${title.length}/140`
+            }
+          />
+        </Box>
 
-        <br />
-        <br />
-        <br />
+        <Box mb={4}>
+          <TextField
+            error={postCreate.fail && postCreate.fail['description']}
+            value={description}
+            multiline
+            rows={4}
+            fullWidth
+            variant="outlined"
+            placeholder="explain your idea"
+            label="Description"
+            required
+            autoComplete="off"
+            onChange={event => setDescription(event.target.value)}
+            helperText={
+              postCreate.fail && postCreate.fail['description']
+                ? `description ${postCreate.fail['description']}`
+                : `${description.length}/1000`
+            }
+          />
+        </Box>
 
-        <TextField
-          value={description}
-          multiline
-          rows={4}
-          fullWidth
-          variant="outlined"
-          placeholder="explain your idea"
-          label="Description"
-          required
-          autoComplete="off"
-          onChange={event => setDescription(event.target.value)}
-          helperText={`${description.length}/1000`}
-        />
-
-        <br />
-        <br />
-        <br />
-
-        <TextField
-          value={category}
-          select
-          fullWidth
-          variant="outlined"
-          label="Description"
-          required
-          onChange={event => setCategory(event.target.value)}
-        >
-          <MenuItem value={-1}>select an idea</MenuItem>
-          {[1, 2, 3].map(i => (
-            <MenuItem key={i} value={i}>
-              {i}
-            </MenuItem>
-          ))}
-        </TextField>
-
-        <br />
-        <br />
-        <br />
+        {false && (
+          <Box mb={3}>
+            <TextField
+              value={category}
+              select
+              fullWidth
+              variant="outlined"
+              label="Description"
+              required
+              onChange={event => setCategory(event.target.value)}
+            >
+              <MenuItem value={-1}>select an idea</MenuItem>
+              {[1, 2, 3].map(i => (
+                <MenuItem key={i} value={i}>
+                  {i}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Box>
+        )}
 
         <Typography>Picture cover (optional)</Typography>
-        <Grid
-          className={styles.image}
-          container
-          justify="center"
-          alignItems="center"
-          style={{
-            backgroundImage: `url(${imageUrl()})`,
-            backgroundSize: imageFile ? 'contain' : 'cover'
-          }}
-        >
-          <Button variant="contained" component="label">
-            Choose an image
-            <Hidden>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={fileSelected}
-                style={{ display: 'none' }}
-              />
-            </Hidden>
-          </Button>
-          {imageFile && (
-            <Fab
-              size="small"
-              style={{ position: 'absolute', top: 10, right: 10 }}
-              onClick={clearImage}
-            >
-              <SvgX />
-            </Fab>
-          )}
-        </Grid>
-        <br />
-        <br />
+        <Box mb={2}>
+          <Grid
+            className={styles.image}
+            container
+            justify="center"
+            alignItems="center"
+            style={{
+              backgroundImage: `url(${imageUrl()})`,
+              backgroundSize: imageFile ? 'contain' : 'cover'
+            }}
+          >
+            <Button variant="contained" component="label">
+              Choose an image
+              <Hidden>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={fileSelected}
+                  style={{ display: 'none' }}
+                />
+              </Hidden>
+            </Button>
+            {imageFile && (
+              <Fab
+                size="small"
+                style={{ position: 'absolute', top: 10, right: 10 }}
+                onClick={clearImage}
+              >
+                <SvgX />
+              </Fab>
+            )}
+          </Grid>
+        </Box>
+
         <Grid container justify="flex-end">
           <Button
             onClick={submitPost}

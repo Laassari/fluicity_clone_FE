@@ -5,7 +5,8 @@ const initialState = {
     loading: false,
     success: null,
     fail: null
-  }
+  },
+  content: null
 };
 export default function post(state = initialState, { type, payload }) {
   switch (type) {
@@ -35,6 +36,12 @@ export default function post(state = initialState, { type, payload }) {
           success: null,
           fail: payload
         }
+      };
+
+    case POST.SET:
+      return {
+        ...state,
+        content: payload
       };
 
     default:
