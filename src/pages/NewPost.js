@@ -75,28 +75,12 @@ function NewPost() {
   };
 
   const submitPost = () => {
-    const post = {
-      title,
-      description,
-      image: encodeImageToBase64(imageUrl())
-    };
+    const postData = new FormData();
+    postData.append('title', title);
+    postData.append('description', description);
+    postData.append('image', imageFile);
 
-    dispatch({ type: POST.CREATE_REQUEST, payload: post });
-  };
-
-  const encodeImageToBase64 = image => {
-    const img = new Image(300, 300);
-    img.src = image;
-    const canvas = document.createElement('canvas');
-    canvas.width = img.width;
-    canvas.height = img.height;
-
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(img, 0, 0);
-
-    const dataURL = canvas.toDataURL('image/png');
-
-    return dataURL.split(',')[1];
+    dispatch({ type: POST.CREATE_REQUEST, payload: postData });
   };
 
   if (postCreate.success && post) {
