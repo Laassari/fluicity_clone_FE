@@ -1,6 +1,7 @@
 import { create } from 'apisauce';
 
-export const API_ENDPOINT = process.env.API_ENDPOINT || 'http://localhost:9090';
+export const API_ENDPOINT =
+  process.env.REACT_APP_API_ENDPOINT || 'http://localhost:9090';
 
 async function Api({
   method = 'GET',
