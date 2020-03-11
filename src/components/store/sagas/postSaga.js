@@ -1,9 +1,14 @@
 import { takeLatest, put } from 'redux-saga/effects';
 import Api from 'Api';
 import { POST } from '../constants';
+import { http } from 'Api';
 
 export function* watchCreatePost() {
   yield takeLatest(POST.CREATE_REQUEST, createPost);
+}
+
+export function* watchGetPost() {
+  yield takeLatest(POST.GET_POST_REQUEST, getPost);
 }
 
 export function* createPost({ payload }) {
@@ -16,16 +21,16 @@ export function* createPost({ payload }) {
     yield put({ type: POST.CREATE_FAIL, payload: response.data });
   }
 }
+
+function* getPost({ payload }) {
   const response = yield Api({
-    method: 'POST',
-    url: '/posts',
-    data: payload
+    url: '/posts/' + payload
   });
 
   if (response.id) {
-    yield put({ type: POST.CREATE_SUCCESS });
+    yield put({ type: POST.GET_POST_SUCCESS });
     yield put({ type: POST.SET, payload: response });
   } else {
-    yield put({ type: POST.CREATE_FAIL, payload: response });
+    yield put({ type: POST.GET_POST_FAIL, payload: response });
   }
 }

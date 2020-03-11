@@ -7,7 +7,7 @@ import Home from 'pages/Home';
 import About from 'pages/About';
 import './App.css';
 import Footer from './Footer';
-import Space from 'pages/Space';
+import PostDetails from 'pages/PostDetails';
 import { Provider } from 'react-redux';
 import configureStore from './store';
 import NewPost from 'pages/NewPost';
@@ -21,8 +21,8 @@ function App() {
         <Navbar />
         <Box style={{ minHeight: 'calc(100vh - 140px)' }}>
           <Route path="/" exact component={Home} />
-          <Route path="/spaces/:id" exact component={Space} />
           <Route path="/posts/new" exact component={NewPost} />
+          <Route path="/posts/:id(\d+)" exact component={PostDetails} />
           <Route path="/about" exact component={About} />
         </Box>
         <Footer />

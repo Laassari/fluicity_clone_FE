@@ -6,7 +6,12 @@ const initialState = {
     success: null,
     fail: null
   },
-  content: null
+  getPost: {
+    loading: false,
+    success: null,
+    fail: null
+  },
+  content: {}
 };
 export default function post(state = initialState, { type, payload }) {
   switch (type) {
@@ -32,6 +37,34 @@ export default function post(state = initialState, { type, payload }) {
       return {
         ...state,
         postCreate: {
+          loading: false,
+          success: null,
+          fail: payload
+        }
+      };
+
+    case POST.GET_POST_REQUEST:
+      return {
+        ...state,
+        getPost: {
+          loading: true,
+          success: null,
+          fail: null
+        }
+      };
+    case POST.GET_POST_SUCCESS:
+      return {
+        ...state,
+        getPost: {
+          loading: false,
+          success: true,
+          fail: null
+        }
+      };
+    case POST.GET_POST_FAIL:
+      return {
+        ...state,
+        getPost: {
           loading: false,
           success: null,
           fail: payload
