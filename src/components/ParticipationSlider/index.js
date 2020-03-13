@@ -7,7 +7,7 @@ import { ReactComponent as ChevronLeft } from 'assets/svg/chevron-left.svg';
 import { ReactComponent as ChevronRight } from 'assets/svg/chevron-right.svg';
 import cyan from '@material-ui/core/colors/cyan';
 import SwipeableViews from 'react-swipeable-views';
-import Post from './Post';
+import Post from './PostPreview';
 
 const useStyles = makeStyles(theme => ({
   boldText: {
@@ -35,6 +35,15 @@ function ParticipationSlider() {
   const swipeSlider = () => {
     setIndexCurrent((indexCurrent + 1) % 2);
   };
+
+  const postDetails = {
+    title: 'Post title',
+    author: 'Noureddine',
+    excerpt:
+      'Bienvenue sur le site collaboratif Vos Idées Vertes ! Votre rôle ?Partagez vos propositions concrètes, locales ...',
+    category: 'News'
+  };
+
   return (
     <Box mt={4}>
       <Grid container justify="space-between" style={{ marginBottom: 20 }}>
@@ -71,7 +80,7 @@ function ParticipationSlider() {
           <Grid container>
             {[1, 2, 3, 4].map(i => (
               <Grid item xs={3} key={i}>
-                <Post>{i}</Post>
+                <Post {...postDetails}>{i}</Post>
               </Grid>
             ))}
           </Grid>
