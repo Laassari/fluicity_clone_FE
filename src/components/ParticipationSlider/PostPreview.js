@@ -73,7 +73,8 @@ function PostPreview({
   author = '',
   excerpt = '',
   category = 'News',
-  image = Image
+  image = Image,
+  userAvatar
 }) {
   const styles = useStyles();
 
@@ -81,10 +82,10 @@ function PostPreview({
     <Card className={styles.postWrapper}>
       <CardMedia
         className={styles.headerImage}
-        image={Image}
+        image={image}
         title="post header image"
       />
-      <Avatar src={image} className={styles.avatar}>
+      <Avatar src={userAvatar} className={styles.avatar}>
         {author[0]}
       </Avatar>
       <Paper square className={styles.projectType}>
