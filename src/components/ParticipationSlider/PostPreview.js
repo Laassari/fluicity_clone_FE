@@ -68,33 +68,39 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function Post({ children }) {
+function PostPreview({
+  title = '',
+  author = '',
+  excerpt = '',
+  category = 'News',
+  image = Image,
+  userAvatar
+}) {
   const styles = useStyles();
 
   return (
     <Card className={styles.postWrapper}>
       <CardMedia
         className={styles.headerImage}
-        image={Image}
+        image={image}
         title="post header image"
       />
-      <Avatar src={Image} className={styles.avatar}>
-        N
+      <Avatar src={userAvatar} className={styles.avatar}>
+        {author[0]}
       </Avatar>
       <Paper square className={styles.projectType}>
-        News
+        {category}
       </Paper>
 
       <CardContent className={styles.cardContent}>
         <Typography color="textPrimary" className={styles.author}>
-          THOMAS P.
+          {author}
         </Typography>
         <Typography variant="h5" display="block" className={styles.title}>
-          Comment ça marche?
+          {title}
         </Typography>
         <Typography color="textSecondary" className={styles.excerpt}>
-          Bienvenue sur le site collaboratif Vos Idées Vertes ! Votre rôle ?
-          Partagez vos propositions concrètes, locales ...
+          {excerpt.slice(0, 100)}...
         </Typography>
 
         <Link to="/spaces/space-name" className={styles.link}>
@@ -111,4 +117,4 @@ function Post({ children }) {
   );
 }
 
-export default Post;
+export default PostPreview;

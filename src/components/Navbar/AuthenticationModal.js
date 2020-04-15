@@ -15,6 +15,8 @@ import { ReactComponent as LogoMin } from 'assets/svg/logo_min.svg';
 import { ReactComponent as SvgX } from 'assets/svg/x.svg';
 import { ReactComponent as GoogleLogo } from 'assets/svg/google.svg';
 import { ReactComponent as FacebookRectangleLogo } from 'assets/svg/facebook_rectangle.svg';
+import { useDispatch, useSelector } from 'react-redux';
+import { USER } from 'components/store/constants';
 
 const useStyles = makeStyles(theme => ({
   modal: {
@@ -63,22 +65,70 @@ const useStyles = makeStyles(theme => ({
   },
   btnNext: {
     borderRadius: theme.spacing(3)
+  },
+  errorText: {
+    color: 'red',
+    fontSize: '0.8rem',
+    marginTop: -5,
+    marginBlock: 5
   }
 }));
 
-function AuthenticationModal({ modalOpen, closeModal }) {
+function AuthenticationModal({ modalOpen }) {
   const styles = useStyles();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [emailIsValid, setEmailIsValid] = useState(false);
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
 
-  const loginOrSignUp = () => {
-    setLoading(true);
-    // TODO: call actual endpoint
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
+  const dispatch = useDispatch();
+  const { checkEmailExists, login, signup } = useSelector(state => ({
+    checkEmailExists: state.auth.checkEmailExists,
+    login: state.auth.login,
+    signup: state.auth.signup
+  }));
+
+  const isValidEmail = (email = '') => {
+    return /\S+@\S+\.\S+/.test(email);
   };
+
+  const loginOrSignUp = async () => {
+    const user = {
+      person: {
+        email,
+        password
+      }
+    };
+
+    if (checkEmailExists.success) {
+      dispatch({ type: USER.LOGIN_REQUEST, payload: user });
+    } else {
+      user.person.first_name = firstName;
+      user.person.last_name = lastName;
+      dispatch({ type: USER.SIGNUP_REQUEST, payload: user });
+    }
+  };
+
+  const emailAlreadyExist = email => {
+    dispatch({ type: USER.CHECK_EMAIL_EXISTS_REQUEST, payload: { email } });
+    setEmailIsValid(true);
+  };
+
+  const handleEmailChange = event => {
+    const email = (event.target.value || '').toLowerCase();
+    setEmail(email);
+    if (isValidEmail(email)) {
+      emailAlreadyExist(email);
+    } else {
+      setEmailIsValid(false);
+    }
+  };
+
+  const closeModal = () => {
+    dispatch({ type: USER.AUTH_MODAL_OPEN, paylaod: false });
+  };
+
   return (
     <Modal
       open={modalOpen}
@@ -135,21 +185,83 @@ function AuthenticationModal({ modalOpen, closeModal }) {
               variant="filled"
               size="small"
               fullWidth
+              autoComplete="email"
               value={email}
-              onChange={e => setEmail(e.target.value)}
+              onChange={handleEmailChange}
             />
-            <TextField
-              margin="normal"
-              id="password"
-              label="Password"
-              type="password"
-              variant="filled"
-              size="small"
-              fullWidth
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-            />
+
+            {signup.fail && signup.fail['email'] && (
+              <Typography className={styles.errorText} style={{ marginTop: 2 }}>
+                {`email ${signup.fail['email'][0]}`}
+              </Typography>
+            )}
+
+            {emailIsValid && !checkEmailExists.success && (
+              <>
+                <TextField
+                  margin="normal"
+                  id="firstname"
+                  label="first name"
+                  variant="filled"
+                  size="small"
+                  fullWidth
+                  value={firstName}
+                  onChange={e => setFirstName(e.target.value)}
+                />
+
+                {signup.fail && signup.fail['first_name'] && (
+                  <Typography className={styles.errorText}>
+                    {`first name ${signup.fail['first_name'][0]}`}
+                  </Typography>
+                )}
+
+                <TextField
+                  margin="normal"
+                  id="lastname"
+                  label="last name"
+                  variant="filled"
+                  size="small"
+                  fullWidth
+                  value={lastName}
+                  onChange={e => setLastName(e.target.value)}
+                />
+
+                {signup.fail && signup.fail['last_name'] && (
+                  <Typography className={styles.errorText}>
+                    {`last name ${signup.fail['last_name'][0]}`}
+                  </Typography>
+                )}
+              </>
+            )}
+
+            {emailIsValid && (
+              <>
+                <TextField
+                  margin="normal"
+                  id="password"
+                  label="Password"
+                  type="password"
+                  variant="filled"
+                  size="small"
+                  fullWidth
+                  autoComplete="password"
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                />
+
+                {signup.fail && signup.fail['password'] && (
+                  <Typography className={styles.errorText}>
+                    {`password ${signup.fail['password'][0]}`}
+                  </Typography>
+                )}
+              </>
+            )}
             <br />
+            {login.fail && (
+              <Typography className={styles.errorText}>
+                {login.fail.errors}
+              </Typography>
+            )}
             <br />
             <Grid container justify="center">
               <Button
@@ -157,11 +269,14 @@ function AuthenticationModal({ modalOpen, closeModal }) {
                 color="primary"
                 className={styles.btnNext}
                 onClick={loginOrSignUp}
+                disabled={!emailIsValid}
               >
-                {loading ? (
+                {login.loading || signup.loading ? (
                   <CircularProgress color="inherit" size={25} />
+                ) : checkEmailExists.success ? (
+                  'Log in'
                 ) : (
-                  'Next'
+                  'Sign Up'
                 )}
               </Button>
             </Grid>

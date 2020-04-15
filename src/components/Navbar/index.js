@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Box from '@material-ui/core/Box';
 import { makeStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
-import { Container } from '@material-ui/core';
+import { Container, Avatar } from '@material-ui/core';
+import { useSelector, useDispatch } from 'react-redux';
 import { ReactComponent as FluicityLogo } from 'assets/svg/Logo_fluicity.svg';
 import AuthenticationModal from './AuthenticationModal';
+import { USER } from 'components/store/constants';
 
 const useStyles = makeStyles(theme => ({
   header: {
@@ -29,11 +31,11 @@ const useStyles = makeStyles(theme => ({
 
 function Navbar() {
   const classes = useStyles();
-  const [modalOpen, setModalOpen] = useState(false);
-
-  const showLoginModal = () => {
-    setModalOpen(true);
-  };
+  const dispatch = useDispatch();
+  const { user, authModalOpen } = useSelector(state => ({
+    user: state.auth.user,
+    authModalOpen: state.auth.authModalOpen
+  }));
 
   return (
     <Box component="nav" className={classes.nav} boxShadow={3}>
@@ -41,20 +43,38 @@ function Navbar() {
         <Link to="/" className={classes.logoWrapper}>
           <FluicityLogo color="black" />
         </Link>
-        <Button
-          classes={{ root: classes.loginBtn }}
-          color="primary"
-          variant="contained"
-          onClick={showLoginModal}
-        >
-          Join
-        </Button>
+
+        <Box>
+          {user.email && (
+            <Link to="/posts/new">
+              <Button variant="outlined" style={{ marginRight: 8 }}>
+                New Post
+              </Button>
+            </Link>
+          )}
+
+          {!user.email ? (
+            <Button
+              classes={{ root: classes.loginBtn }}
+              color="primary"
+              variant="contained"
+              onClick={() => {
+                dispatch({ type: USER.AUTH_MODAL_OPEN, payload: true });
+              }}
+            >
+              Join
+            </Button>
+          ) : (
+            <Button size="small">
+              <Avatar style={{ width: 28, height: 28 }}>
+                {user.first_name[0]}
+              </Avatar>
+            </Button>
+          )}
+        </Box>
       </Container>
 
-      <AuthenticationModal
-        modalOpen={modalOpen}
-        closeModal={() => setModalOpen(false)}
-      />
+      <AuthenticationModal modalOpen={authModalOpen} />
     </Box>
   );
 }
